@@ -1,0 +1,37 @@
+[
+  {
+    "testCaseName": "Valid Standard User Login",
+    "username": "standard_user",
+    "password": "secret_sauce",
+    "expectedErrorMessage": "",
+    "isSuccess": true
+  },
+  {
+    "testCaseName": "Invalid User Login",
+    "username": "invalid_user",
+    "password": "wrong_password",
+    "expectedErrorMessage": "Username and password do not match any user in this service",
+    "isSuccess": false
+  },
+  {
+    "testCaseName": "Locked Out User Login",
+    "username": "locked_out_user",
+    "password": "secret_sauce",
+    "expectedErrorMessage": "Sorry, this user has been locked out.",
+    "isSuccess": false
+  },
+  {
+    "testCaseName": "Empty Username Login",
+    "username": "",
+    "password": "secret_sauce",
+    "expectedErrorMessage": "Username is required",
+    "isSuccess": false
+  },
+  {
+    "testCaseName": "Empty Password Login",
+    "username": "standard_user",
+    "password": "",
+    "expectedErrorMessage": "Password is required",
+    "isSuccess": false
+  }
+]

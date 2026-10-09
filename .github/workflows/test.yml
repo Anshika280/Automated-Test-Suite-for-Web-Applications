@@ -1,0 +1,75 @@
+name: Automated Test Suite (ATS) CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target Environment (qa/staging)'
+        required: true
+        default: 'qa'
+        type: choice
+        options:
+          - qa
+          - staging
+      browser:
+        description: 'Target Browser (chrome/firefox/edge)'
+        required: true
+        default: 'chrome'
+        type: choice
+        options:
+          - chrome
+          - firefox
+          - edge
+
+jobs:
+  test:
+    name: Run Automated Tests
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chrome]
+        java-version: [17]
+
+    steps:
+      - name: Checkout Code Repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK ${{ matrix.java-version }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.java-version }}
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Set up Chrome Browser & Driver
+        uses: browser-actions/setup-chrome@v1
+        if: matrix.browser == 'chrome'
+
+      - name: Run Maven Test Suite
+        run: |
+          mvn test \
+            -Dbrowser=${{ inputs.browser || matrix.browser }} \
+            -Denvironment=${{ inputs.environment || 'qa' }} \
+            -Dheadless=true
+
+      - name: Generate Allure Report
+        if: always()
+        run: mvn allure:report
+
+      - name: Upload Test Results & Allure Artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: allure-report-${{ matrix.browser }}
+          path: |
+            target/site/allure-maven-plugin
+            allure-results
+            screenshots
+            logs
+          retention-days: 14

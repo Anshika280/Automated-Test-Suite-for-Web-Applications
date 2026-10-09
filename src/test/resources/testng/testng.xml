@@ -1,0 +1,25 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+<suite name="Automated Test Suite" verbose="1">
+    <listeners>
+        <listener class-name="framework.listeners.TestListener" />
+        <listener class-name="framework.listeners.AnnotationTransformer" />
+    </listeners>
+    <test name="UI, API &amp; Hybrid Integration Test Suite">
+        <classes>
+            <class name="tests.config.ConfigManagerTest" />
+            <class name="tests.driver.DriverFactoryTest" />
+            <class name="tests.ui.BaseTestSampleTest" />
+            <class name="tests.ui.PomVerificationTest" />
+            <class name="tests.utils.WaitUtilsTest" />
+            <class name="tests.ui.SmokeTest" />
+            <class name="tests.ui.FunctionalTest" />
+            <class name="tests.ui.RegressionTest" />
+            <class name="tests.ui.DataDrivenLoginTest" />
+            <class name="tests.api.UserApiTest" />
+            <class name="tests.api.AuthApiTest" />
+            <class name="tests.integration.ApiUiIntegrationTest" />
+            <class name="tests.db.DatabaseValidationTest" />
+            <class name="tests.listeners.ListenerAndRetryTest" />
+        </classes>
+    </test>
+</suite>

@@ -1,0 +1,38 @@
+# Build outputs
+
+target/
+
+# IDE files
+
+.idea/
+*.iml
+.vscode/
+.settings/
+.classpath
+.project
+
+# Framework outputs & test evidence
+
+logs/*
+!logs/.gitkeep
+reports/*
+!reports/.gitkeep
+screenshots/*
+!screenshots/.gitkeep
+allure-results/
+allure-report/
+.allure/
+
+# Environment variables and secrets
+
+.env
+.env.*
+!.env.example
+secrets/
+*.pem
+*.key
+
+# OS-specific files
+
+.DS_Store
+Thumbs.db
