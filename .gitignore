@@ -36,3 +36,4 @@ secrets/
 
 .DS_Store
 Thumbs.db
+docker-test-log.txt

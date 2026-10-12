@@ -20,14 +20,19 @@ public class CheckoutPage extends BasePage {
         super(driver);
     }
 
-    public CheckoutPage enterInformation(String firstName, String lastName, String postalCode) {
-        String safeFirst = (firstName != null && !firstName.trim().isEmpty()) ? firstName : "DefaultFirst";
-        String safeLast = (lastName != null && !lastName.trim().isEmpty()) ? lastName : "DefaultLast";
-        String safeZip = (postalCode != null && !postalCode.trim().isEmpty()) ? postalCode : "12345";
+    private String lastFirstName = "DefaultFirst";
+    private String lastLastName = "DefaultLast";
+    private String lastPostalCode = "12345";
 
-        sendKeys(firstNameInput, safeFirst);
-        sendKeys(lastNameInput, safeLast);
-        sendKeys(postalCodeInput, safeZip);
+    public CheckoutPage enterInformation(String firstName, String lastName, String postalCode) {
+        this.lastFirstName = (firstName != null && !firstName.trim().isEmpty()) ? firstName : "DefaultFirst";
+        this.lastLastName = (lastName != null && !lastName.trim().isEmpty()) ? lastName : "DefaultLast";
+        this.lastPostalCode = (postalCode != null && !postalCode.trim().isEmpty()) ? postalCode : "12345";
+
+        waitUtils.waitForVisibility(firstNameInput, 10);
+        sendKeys(firstNameInput, this.lastFirstName);
+        sendKeys(lastNameInput, this.lastLastName);
+        sendKeys(postalCodeInput, this.lastPostalCode);
         return this;
     }
 
@@ -35,10 +40,17 @@ public class CheckoutPage extends BasePage {
         log.info("Clicking continue button on checkout step one");
         click(continueButton);
         try {
-            waitUtils.waitForVisibility(finishButton, 5);
+            waitUtils.waitForVisibility(finishButton, 8);
         } catch (Exception e) {
-            log.warn("Finish button not visible after standard click, executing JS click fallback on continue button...");
-            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", driver.findElement(continueButton));
+            By errorBanner = By.cssSelector("[data-test='error']");
+            if (isDisplayed(errorBanner, 2)) {
+                log.warn("Step one validation error displayed: '{}'. Re-entering customer info and re-clicking continue...", getText(errorBanner));
+                enterInformation(lastFirstName, lastLastName, lastPostalCode);
+                click(continueButton);
+            } else {
+                log.warn("Finish button not visible after standard click, executing JS click fallback on continue button...");
+                ((JavascriptExecutor) driver).executeScript("arguments[0].click();", driver.findElement(continueButton));
+            }
             waitUtils.waitForVisibility(finishButton, 15);
         }
         return this;

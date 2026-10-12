@@ -35,6 +35,7 @@ public class FunctionalTest extends BaseTest {
     public void testAddItemToCartAndRemove() {
         LoginPage loginPage = new LoginPage(DriverManager.getDriver());
         InventoryPage inventoryPage = loginPage.login("standard_user", "secret_sauce");
+        Assert.assertTrue(inventoryPage.isPageLoaded(), "Inventory page should be loaded after valid login");
 
         inventoryPage.addBackpackToCart();
         Assert.assertEquals(inventoryPage.getCartItemBadgeCount(), "1", "Cart badge count should be 1");
@@ -47,6 +48,7 @@ public class FunctionalTest extends BaseTest {
     public void testEndToEndCheckoutWorkflow() {
         LoginPage loginPage = new LoginPage(DriverManager.getDriver());
         InventoryPage inventoryPage = loginPage.login("standard_user", "secret_sauce");
+        Assert.assertTrue(inventoryPage.isPageLoaded(), "Inventory page should be loaded after valid login");
 
         inventoryPage.addBackpackToCart();
         CartPage cartPage = inventoryPage.clickShoppingCart();

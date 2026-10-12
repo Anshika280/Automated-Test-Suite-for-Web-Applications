@@ -63,6 +63,15 @@ public final class ConfigManager {
             return systemProp.trim();
         }
 
+        // Check alias notation (e.g., baseUrl <-> base.url, gridUrl <-> grid.url)
+        String altKey = key.contains(".")
+                ? key.replace(".", "")
+                : key.replaceAll("([a-z])([A-Z])", "$1.$2").toLowerCase();
+        String altProp = System.getProperty(altKey);
+        if (altProp != null && !altProp.trim().isEmpty()) {
+            return altProp.trim();
+        }
+
         // Tier 1b: System Environment Variable (e.g. GRID_URL, BROWSER, HEADLESS, BASE_URL)
         String envVar = System.getenv(key);
         if (envVar == null) {

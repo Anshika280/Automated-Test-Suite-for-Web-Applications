@@ -50,6 +50,22 @@ public abstract class BasePage {
         element.click();
         element.clear();
         element.sendKeys(text);
+        if (text != null && !text.isEmpty()) {
+            String entered = element.getAttribute("value");
+            if (!text.equals(entered)) {
+                log.warn("Text mismatch on [{}] after sendKeys. Expected: '{}', Found: '{}'. Retrying with JS setter...", locator, text, entered);
+                element.click();
+                ((JavascriptExecutor) driver).executeScript(
+                    "var el = arguments[0];" +
+                    "var setter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value');" +
+                    "if (setter && setter.set) { setter.set.call(el, arguments[1]); }" +
+                    "else { el.value = arguments[1]; }" +
+                    "el.dispatchEvent(new Event('input', { bubbles: true }));" +
+                    "el.dispatchEvent(new Event('change', { bubbles: true }));",
+                    element, text
+                );
+            }
+        }
     }
 
     protected void sendKeys(By locator, String text, int customTimeoutSeconds) {
@@ -58,6 +74,22 @@ public abstract class BasePage {
         element.click();
         element.clear();
         element.sendKeys(text);
+        if (text != null && !text.isEmpty()) {
+            String entered = element.getAttribute("value");
+            if (!text.equals(entered)) {
+                log.warn("Text mismatch on [{}] after sendKeys. Expected: '{}', Found: '{}'. Retrying with JS setter...", locator, text, entered);
+                element.click();
+                ((JavascriptExecutor) driver).executeScript(
+                    "var el = arguments[0];" +
+                    "var setter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value');" +
+                    "if (setter && setter.set) { setter.set.call(el, arguments[1]); }" +
+                    "else { el.value = arguments[1]; }" +
+                    "el.dispatchEvent(new Event('input', { bubbles: true }));" +
+                    "el.dispatchEvent(new Event('change', { bubbles: true }));",
+                    element, text
+                );
+            }
+        }
     }
 
     protected String getText(By locator) {
